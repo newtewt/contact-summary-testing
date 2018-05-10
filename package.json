@@ -1,6 +1,6 @@
 {
   "name": "@medic/contact-summary-testing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "jshint": "jshint src/**/*.js",
-    "release": "git push && git tag v$(jq -r .version package.json) && git push --tags && npm publish",
+    "release": "git push && git tag v$(jq -r .version package.json) && git push --tags && npm publish --access=public",
     "test": "npm run jshint"
   },
   "dependencies": {

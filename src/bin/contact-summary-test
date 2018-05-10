@@ -2,6 +2,7 @@
 const assert = require('chai').assert;
 const fs = require('../lib/sync-fs');
 const info = require('../lib/log').info;
+const readTemplatedJs = require('medic-conf/src/lib/read-templated-js');
 const Script = require('vm').Script;
 const trace = require('../lib/log').trace;
 const usage = require('../cli/usage');
@@ -13,20 +14,13 @@ if(args[0] === '--help') {
   usage(0);
 }
 
-let contactSummaryFile;
-let testDir;
-if(args.length < 2) {
-  contactSummaryFile = './contact-summary.js';
-  testDir = './test/contact-summary';
-} else {
-  contactSummaryFile = args[0];
-  testDir = args[1];
-}
+const contactSummaryFile = 'contact-summary.js';
+const testDir = './test/contact-summary';
 info(`Loading:
   contact-summary.js: ${contactSummaryFile}
   tests:              ${testDir}`);
 
-const contactSummarySrc = fs.read(contactSummaryFile);
+const contactSummarySrc = readTemplatedJs('.', contactSummaryFile);
 
 const contactSummary = new Script(`
 (function() {

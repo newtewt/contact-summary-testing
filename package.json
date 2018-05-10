@@ -12,10 +12,11 @@
   "scripts": {
     "jshint": "jshint src/**/*.js",
     "release": "git push && git tag v$(jq -r .version package.json) && git push --tags && npm publish --access=public",
-    "test": "npm run jshint"
+    "test": "npm run jshint && (cd test/smoke && ../../src/bin/contact-summary-test)"
   },
   "dependencies": {
-    "chai": "^4.1.2"
+    "chai": "^4.1.2",
+    "redact-basic-auth": "^1.0.0"
   },
   "devDependencies": {
     "jshint": "^2.9.5"

@@ -1,0 +1,23 @@
+{
+  "name": "@medic/contact-summary-testing",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medic/contact-summary-testing.git"
+  },
+  "bin": {
+    "medic-contact-summary-test": "src/bin/contact-summary-test"
+  },
+  "scripts": {
+    "jshint": "jshint src/**/*.js",
+    "release": "git push && git tag v$(jq -r .version package.json) && git push --tags && npm publish",
+    "test": "npm run jshint"
+  },
+  "dependencies": {
+    "chai": "^4.1.2"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.5"
+  }
+}

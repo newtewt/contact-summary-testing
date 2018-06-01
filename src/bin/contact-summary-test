@@ -2,7 +2,7 @@
 const assert = require('chai').assert;
 const fs = require('../lib/sync-fs');
 const info = require('../lib/log').info;
-const readTemplatedJs = require('medic-conf/src/lib/read-templated-js');
+const readTemplatedJs = require('medic-conf/src/lib/templated-js');
 const Script = require('vm').Script;
 const trace = require('../lib/log').trace;
 const usage = require('../cli/usage');
@@ -20,7 +20,7 @@ info(`Loading:
   contact-summary.js: ${contactSummaryFile}
   tests:              ${testDir}`);
 
-const contactSummarySrc = readTemplatedJs('.', contactSummaryFile);
+const contactSummarySrc = readTemplatedJs.fromFile('.', contactSummaryFile);
 
 const contactSummary = new Script(`
 (function() {

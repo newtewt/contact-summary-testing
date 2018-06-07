@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const assert = require('chai').assert;
+const compileContactSummary = require('medic-conf/src/lib/compile-contact-summary');
 const fs = require('../lib/sync-fs');
 const info = require('../lib/log').info;
 const readTemplatedJs = require('medic-conf/src/lib/templated-js');
@@ -14,13 +15,11 @@ if(args[0] === '--help') {
   usage(0);
 }
 
-const contactSummaryFile = 'contact-summary.js';
 const testDir = './test/contact-summary';
 info(`Loading:
-  contact-summary.js: ${contactSummaryFile}
   tests:              ${testDir}`);
 
-const contactSummarySrc = readTemplatedJs.fromFile('.', contactSummaryFile);
+const contactSummarySrc = compileContactSummary('.');
 
 const contactSummary = new Script(`
 (function() {

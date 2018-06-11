@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-const assert = require('chai').assert;
+const chai = require('chai')
+const assert = chai.assert;
+const AssertionError = require('assertion-error');
 const compileContactSummary = require('medic-conf/src/lib/compile-contact-summary');
 const fs = require('../lib/sync-fs');
 const info = require('../lib/log').info;
@@ -27,6 +29,26 @@ const contactSummary = new Script(`
 }())
 `);
 
+const stringify = o => JSON.stringify(o, null, 2);
+function assertDeepEqual(actual, expected, prop) {
+  try {
+    assert.deepEqual(actual[prop],  expected[prop]);
+  } catch(e) {
+    if(e instanceof AssertionError) {
+      console.log(`
+UNEXPECTED VALUE FOR .${prop}:
+
+EXPECTED:
+${stringify(expected)}
+
+ACTUAL:
+${stringify(actual)}
+      `);
+    }
+    throw e;
+  }
+}
+
 const failures = [];
 let testCount = 0;
 
@@ -47,14 +69,15 @@ fs.readdir(testDir)
       };
       const actualOutput = contactSummary.runInNewContext(testContext);
 
-      assert.deepEqual(
-          JSON.parse(JSON.stringify(actualOutput)), // IGNORE UNDEFINED VALUES
-          expectedOutput,
-          `Not equal:
-  EXPECTED: ${JSON.stringify(expectedOutput)}
-  ACTUAL:   ${JSON.stringify(actualOutput)}
-    (Note: ordering of this output is not guaranteed, but content of objects is compared with assert.deepEqual())
-`);
+      // reparse actual output to remove undefined values
+      const cleanedOutput = JSON.parse(JSON.stringify(actualOutput));
+
+      // compare inidividual properties first for better diffs
+      assertDeepEqual(cleanedOutput, expectedOutput, 'fields');
+      assertDeepEqual(cleanedOutput, expectedOutput, 'cards');
+      assertDeepEqual(cleanedOutput, expectedOutput, 'context');
+
+      assert.deepEqual(cleanedOutput, expectedOutput);
 
       console.log(`    ✅  ${testName}`);
     } catch(e) {
